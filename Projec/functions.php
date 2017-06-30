@@ -32,6 +32,7 @@ add_action( 'after_setup_theme', 'blank_setup' );
 
 add_theme_support( 'post-thumbnails' ); 
 
+//Registers session variables for use in lue of MYSQL Databases, easily replaceable for real world use application.
 function register_my_session(){
   if( !session_id() ){
     session_start();
@@ -48,10 +49,12 @@ function blank_enqueue_style() {
 }
 add_action( 'wp_enqueue_scripts', 'blank_enqueue_style' );
 
+//This function creates the array of categories and their corresponding values that each JSON object will have to match
 function create_needle_stack(){
 	$x = $_POST['value'];
 	$y = $_POST['category'];
-
+	
+	//Unsets the array value if the check box is unselected
 	if (($key = array_search($x, $_SESSION['arraytrans'][$y])) !== false) {
     	unset($_SESSION['arraytrans'][$y][$key]);
 	} else {
@@ -59,10 +62,12 @@ function create_needle_stack(){
 		arraycompare($_SESSION['arraytrans']);
 	}
 	die();
+	//This is a AJAX function, so die(); is needed
 }
 add_action('wp_ajax_filter', 'create_needle_stack');
 add_action('wp_ajax_nopriv_filter', 'create_needle_stack');
 
+//Retrieves the JSON objects from the sites API and puts them each into their own sub category array
 function arraycompare($arrayParam){
 	$url = "https://blacklapel.com/api/product/category/suits";
 	$ch = curl_init();
@@ -87,6 +92,7 @@ function arraycompare($arrayParam){
 	}
 }
 
+//Uses the validated JSON object and then constructs the HTML to display using said data
 function construct_html($json_object) {
 	echo "<a href='product/?slug=" . $json_object->slug . "'><li class='suit-object'>";
 	echo "<h1>" . $json_object->name . "</h1>";
@@ -95,6 +101,7 @@ function construct_html($json_object) {
 	echo "</li></a>";
 }
 
+//The JSON object's image link was a string.. so I had to extract the portion of the url string that I needed
 function get_string_between($string, $start, $end){
     $string = ' ' . $string;
     $ini = strpos($string, $start);
@@ -104,6 +111,8 @@ function get_string_between($string, $start, $end){
     return substr($string, $ini, $len);
 }
 
+
+//Once the product is selected, this takes the slug from the selected JSON object and uses it to retrieve another API for the individual product, It uses GET and the Javascript is ugly.. but the concept is there.
 function init_customization() {
 	if (isset($_GET['slug'])) {
 		$url = "https://blacklapel.com/api/product/option/" . $_GET['slug'];
@@ -132,6 +141,7 @@ function init_customization() {
 	}
 }
 
+//Constructs the HTML for the customization page options
 function customization_options() {
 foreach ($_SESSION['customization_options'] as $customization_Object) {
 	echo "<div class='option-div'>";
@@ -153,6 +163,8 @@ foreach ($_SESSION['customization_options'] as $customization_Object) {
 add_action('wp_ajax_options', 'finalize-custom');
 add_action('wp_ajax_nopriv_options', 'finalize-custom');
 
+
+//Once the form is submitted, this dumps the data of the form, for use later.
 function finalizeCustom() {
 $formValue = $_POST['formValue'];
 echo "REVIEW YOUR SELECTIONS";
