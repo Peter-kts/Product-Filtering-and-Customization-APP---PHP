@@ -157,11 +157,6 @@ function finalizeCustom() {
 $formValue = $_POST['formValue'];
 echo "REVIEW YOUR SELECTIONS";
 var_dump($formValue);
-// foreach ($formValue as $value) {
-// 	foreach ($value as $subValue) {
-// 		var_dump($subValue);
-// 	}
-// }
 die();
 }
 
