@@ -2,6 +2,7 @@
 <?php get_header(); ?>
 
 <?php
+//Customization form HTML, uses a PHP function in the function.php to generate it all
 echo ("<form id='customization-form' method='post' name='customization-form' action=''>");
 	init_customization();
 	echo ("<input type='submit' />");
