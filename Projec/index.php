@@ -1,5 +1,6 @@
 <?php get_header(); ?>
 
+//Jquery AJAX calls, they get the data values inside the html constructed with the html constructor function
 <script type="text/javascript">
 jQuery(function($){
   $('#catFilter input[type=checkbox]').on('click', function(e){
@@ -38,6 +39,9 @@ $needleArray = array('color' => array(),
 					 'season' => array(),
 					 'pattern' => array());
 $_SESSION['arraytrans'] = $needleArray;
+
+//This uses the session PHP vairable, replaceable by a MYSQL database or so, in order to store the values from the filter selectors.
+//They are each divided by category in order to allow cross-category filtration
 
 $colorArray = array();
 $occasionArray = array();
